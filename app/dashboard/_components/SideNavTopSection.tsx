@@ -29,6 +29,12 @@ export default function SideNavTopSection({user,setActiveTeamInfo}:any) {
         },
         {
             id:2,
+            name:'Join Team',
+            path:'/teams/join',
+            icon:Users
+        },
+        {
+            id:3,
             name:'Settings',
             path:'',
             icon:Settings

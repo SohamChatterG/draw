@@ -7,10 +7,9 @@ export default async function middleware(req:NextRequest) {
   });
 }
 export const config = {
-  matcher: ["/dashboard"]
-    // const {isAuthenticated} = getKindeServerSession()
+    // const {isAuthenticated} = getKindeServerSession
     // if (!await isAuthenticated()){
     //     return NextResponse.redirect(new URL('/dashboard'))
     // }
-    // matcher: ["/dashboard"]
+    matcher: ["/dashboard"]
 };

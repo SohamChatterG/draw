@@ -9,10 +9,10 @@ import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { FILE } from "@/app/dashboard/_components/FileList";
 import dynamic from 'next/dynamic';
-import { Excalidraw } from "@excalidraw/excalidraw";
-// import Canvas from "../_components/Canvas";
+import {ResizableBox} from 'react-resizable'
+import Canvas from "../_components/Canvas";
 // Dynamically import the Canvas component with no SSR
-const Canvas = dynamic(() => import('../_components/Canvas'), { ssr: false });
+// const Canvas = dynamic(() => import('../_components/Canvas'), { ssr: false });
 function WorkSpace({ params: paramsPromise }: any) {
  
   const params = use(paramsPromise); // Use use() to unwrap the params promise
@@ -41,7 +41,6 @@ function WorkSpace({ params: paramsPromise }: any) {
       setLoading(false);
     }
   };
-
   return (
     <div>
       <WorkSpaceHeader onSave={() => setTriggerSave(!triggerSave)} />
@@ -56,10 +55,10 @@ function WorkSpace({ params: paramsPromise }: any) {
             )
           )}
         </div>
-        <div className="h-screen w-screen">
-          <Canvas />
+        <div className="h-screen border-l">
           
-          {/* <Excalidraw /> */}
+          <Canvas onSaveTrigger={triggerSave} fileId={params.field} fileData={fileData}/>
+          
         </div>
       </div>
     </div>
