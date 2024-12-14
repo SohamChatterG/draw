@@ -27,6 +27,10 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 function Canvas({onSaveTrigger,fileId,fileData}:{onSaveTrigger:any,fileId:any,fileData:FILE | null}) {
   
+
+    
+
+
     const [whiteBoardData,setWhiteBoardData]=useState<any>();
     
     const updateWhiteboard=useMutation(api.functions.files.updateWhiteboard)
@@ -40,7 +44,7 @@ function Canvas({onSaveTrigger,fileId,fileData}:{onSaveTrigger:any,fileId:any,fi
         }).then(resp=>console.log('canvas',resp))
     }
     return (
-    <div style={{ height: "670px" }}>
+    <div style={{ height: "670px", overflow: "hidden" }}>
    {fileData&& <Excalidraw 
     theme='light'
     initialData={{

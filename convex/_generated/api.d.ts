@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as functions_files from "../functions/files.js";
+import type * as functions_membership from "../functions/membership.js";
 import type * as functions_teams from "../functions/teams.js";
 import type * as functions_user from "../functions/user.js";
 import type * as public from "../public.js";
@@ -28,6 +29,7 @@ import type * as public from "../public.js";
  */
 declare const fullApi: ApiFromModules<{
   "functions/files": typeof functions_files;
+  "functions/membership": typeof functions_membership;
   "functions/teams": typeof functions_teams;
   "functions/user": typeof functions_user;
   public: typeof public;

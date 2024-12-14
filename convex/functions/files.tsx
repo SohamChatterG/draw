@@ -16,19 +16,23 @@ export const createFile = mutation({
     }
 })
 
-export const getFiles=query({
-    args:{
-        teamId:v.string()
+export const getFiles = query({
+    args: {
+        teamId: v.optional(v.string()), // Use `v.optional` to make it optional
     },
-    handler:async(ctx, args)=> {
-        const result=await ctx.db.query('files')
-        .filter(q=>q.eq(q.field('teamId'),args.teamId))
-        .order('desc')
-        .collect();
+    handler: async (ctx, args) => {
+        const queryBuilder = ctx.db.query('files');
 
-        return result;
+        // Conditionally apply the filter only if `teamId` is provided
+        const result = args.teamId
+            ? queryBuilder.filter(q => q.eq(q.field('teamId'), args.teamId))
+            : queryBuilder;
+
+        const files = await result.order('desc').collect();
+        return files;
     },
-})
+});
+
 
 export const updateDocument=mutation({
     args:{

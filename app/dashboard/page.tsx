@@ -34,7 +34,7 @@ const Dashboard = () => {
   return (
     <div className="p-8">
         <Header />
-        <FileList />
+        {user&&<FileList />}
       {/* <Button>
         <LogoutLink>LogOut</LogoutLink>
       </Button> */}
