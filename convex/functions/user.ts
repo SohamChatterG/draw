@@ -14,7 +14,7 @@ export const getUser = query({
         return result
     }
 })
-// mutation i sused for post,put,delete endpoints
+// mutation i used for post,put,delete endpoints
 export const createUser = mutation({
     args:{
         name:v.string(),

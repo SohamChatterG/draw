@@ -8,8 +8,7 @@ import { useState, useEffect,use } from "react";
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { FILE } from "@/app/dashboard/_components/FileList";
-import dynamic from 'next/dynamic';
-import {ResizableBox} from 'react-resizable'
+
 import Canvas from "../_components/Canvas";
 // Dynamically import the Canvas component with no SSR
 // const Canvas = dynamic(() => import('../_components/Canvas'), { ssr: false });

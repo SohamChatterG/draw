@@ -38,7 +38,7 @@ function WorkSpaceHeader({onSave,fileData}:any) {
         </div>
         <div className="flex items-center gap-4">
             <Button className="h-8 text-[12px] gap-2 bg-yellow-500 hover:bg-yellow-600" onClick={()=>onSave()}><Save className="h-4 w-4"/>Save</Button>
-            <Button className="h-8 text-[12px] gap-2 bg-green-500 hover:bg-green-700" onClick={handleCanvasToImage}>Share <Link className="h-4 w-4"/></Button>
+            <Button className="h-8 text-[12px] gap-2 bg-green-500 hover:bg-green-600" onClick={handleCanvasToImage}>Share <Link className="h-4 w-4"/></Button>
 
         </div>
     </div>

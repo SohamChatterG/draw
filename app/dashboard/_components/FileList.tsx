@@ -1,122 +1,16 @@
-// import { FileListContext } from '@/app/_context/FileListContext';
-// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-// import { Archive, MoreHorizontal } from 'lucide-react';
-// import moment from 'moment';
-// import Image from 'next/image';
-// import React, { useContext, useEffect, useState } from 'react'
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu"
-// import { useRouter } from 'next/navigation';
-
-// export interface FILE{
-//   archive:boolean,
-//   createdBt:string,
-//   document:string,
-//   fileName:string,
-//   teamId:string,
-//   whiteboard:string,
-//   _id:string,
-//   _creationTime:number
-// }
-// function FileList() {
-
-//   const {fileList_,setFileList_}=useContext(FileListContext);
-//   const [fileList,setFileList]=useState<FILE[]>(fileList_);
-//   const {user}:any=useKindeBrowserClient();
-//   const router=useRouter();
-//   useEffect(() => {
-//     console.log("fileList_ from context:", fileList_);
-//     if (fileList_) {
-//       fileList_&&setFileList(fileList_);
-//     }
-//   }, [fileList_]);
-// // bro tumhe niche wala row iss lie ni=hi dikh rha h kyuki filelist defined nhi hai filelist&& wale mei bar bar false aa ja rha h fix that
-  
-//   return (
-//     <div className='mt-10'>
-
-//     <div className="overflow-x-auto">
-//       <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-//         <thead className="ltr:text-left rtl:text-right">
-//           <tr>
-//           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">File Name</td>
-//           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Created At</td>
-//           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Edited</td>
-//           <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Author</td>
-
-//           </tr>
-//         </thead>
-
-//         <tbody className="divide-y divide-gray-200">
-          
-//           {fileList&&fileList.map((file:FILE,index:number)=>(
-//             <tr key={index} className="odd:bg-gray-50 cursor-pointer"
-//             onClick={()=>router.push('/workspace/'+file._id)}
-//             >
-//             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-//               {file.fileName}</td>
-//             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-//               {moment(file._creationTime).format('DD MMM YYYY')} </td>
-//             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-//             {moment(file._creationTime).format('DD MMM YYYY')}
-//             </td>
-//             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-//             {user&& <Image src= {user?.picture}
-//               alt='user'
-//               width={30}
-//               height={30}
-//               className='rounded-full'
-//               />}
-//             </td>
-//             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-            
-//               <DropdownMenu>
-//                 <DropdownMenuTrigger>
-//                   <MoreHorizontal/>
-//                 </DropdownMenuTrigger>
-//                 <DropdownMenuContent>
-                
-//                   <DropdownMenuItem className='gap-3'>
-//                     <Archive className='h-4 w-4'/> Archive
-//                   </DropdownMenuItem>
-                
-//                 </DropdownMenuContent>
-//               </DropdownMenu>
-
-//             </td>
-//           </tr>
-//           ))}
-          
-
-        
-//         </tbody>
-//       </table>
-//     </div>
-//     </div>
-//   )
-// }
-
-// export default FileList
-
-import { FileListContext } from '@/app/_context/FileListContext';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { Archive, MoreHorizontal } from 'lucide-react';
-import moment from 'moment';
-import Image from 'next/image';
-import React, { useContext, useEffect, useState } from 'react';
+import { FileListContext } from "@/app/_context/FileListContext";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Archive, MoreHorizontal } from "lucide-react";
+import moment from "moment";
+import Image from "next/image";
+import React, { useContext, useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 export interface FILE {
   archive: boolean;
@@ -136,7 +30,7 @@ function FileList() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('fileList_ from context:', fileList_);
+    console.log("fileList_ from context:", fileList_);
     if (fileList_) {
       setFileList(fileList_);
     }
@@ -148,11 +42,21 @@ function FileList() {
         <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
           <thead className="ltr:text-left rtl:text-right">
             <tr>
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">File Name</td>
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Created At</td>
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Edited</td>
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Created By</td>
-              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Actions</td>
+              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                File Name
+              </td>
+              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                Created At
+              </td>
+              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                Edited
+              </td>
+              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                Created By
+              </td>
+              <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                Actions
+              </td>
             </tr>
           </thead>
 
@@ -165,16 +69,16 @@ function FileList() {
                   onClick={() => router.push(`/workspace/${file._id}`)}
                 >
                   <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                    {file.fileName || 'Unnamed File'}
+                    {file.fileName || "Unnamed File"}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {moment(file._creationTime).format('DD MMM YYYY')}
+                    {moment(file._creationTime).format("DD MMM YYYY")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {moment(file._creationTime).format('DD MMM YYYY')}
+                    {moment(file._creationTime).format("DD MMM YYYY")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {file.createdBy.slice(0,10) || 'Anonymous'}
+                    {file.createdBy.slice(0, 10) || "Anonymous"}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                     <DropdownMenu>

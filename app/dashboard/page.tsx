@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { LogoutLink, useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import {
+  LogoutLink,
+  useKindeBrowserClient,
+} from "@kinde-oss/kinde-auth-nextjs";
 import { useConvex, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Header from "./_components/Header";
@@ -13,7 +16,9 @@ const Dashboard = () => {
   const createUser = useMutation(api.functions.user.createUser);
 
   const checkUser = async () => {
-    const result = await convex.query(api.functions.user.getUser, { email: user?.email });
+    const result = await convex.query(api.functions.user.getUser, {
+      email: user?.email,
+    });
     if (!result?.length) {
       createUser({
         name: user.given_name,
@@ -33,11 +38,8 @@ const Dashboard = () => {
 
   return (
     <div className="p-8">
-        <Header />
-        {user&&<FileList />}
-      {/* <Button>
-        <LogoutLink>LogOut</LogoutLink>
-      </Button> */}
+      <Header />
+      {user && <FileList />}
     </div>
   );
 };
