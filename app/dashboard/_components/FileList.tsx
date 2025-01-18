@@ -100,7 +100,7 @@ function FileList() {
                   colSpan={5}
                   className="whitespace-nowrap px-4 py-2 text-center text-gray-500"
                 >
-                  No files available.
+                  No files available.Create a file to start with.
                 </td>
               </tr>
             )}
