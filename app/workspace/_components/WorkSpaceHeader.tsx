@@ -2,7 +2,6 @@ import Image from "next/image";
 import logo from "@/public/logo-1.png";
 import { Link, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
 
 interface FileData {
   _id: string;
