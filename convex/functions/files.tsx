@@ -60,6 +60,8 @@ export const updateWhiteboard = mutation({
     return result;
   },
 });
+
+
 export const getFileById = query({
   args: {
     _id: v.id("files"),
