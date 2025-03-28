@@ -16,18 +16,18 @@ function WorkSpace({ params: paramsPromise }: any) {
   const [viewMode, setViewMode] = useState("both"); // Possible values: "editor", "both", "canvas"
 
   // useEffect(() => {
-  //   //@ts-ignore
+  //   //@ts-expect-error
   //   if (params.field) {
   //     getFileData();
   //   }
-  //   //@ts-ignore
+  //   //@ts-expect-error
   // }, [params.field]);
 
   // const getFileData = () => {
   //   try {
-  //     //@ts-ignore
+  //     //@ts-expect-error
   //     const result = useQuery(api.functions.files.getFileById, {
-  //       //@ts-ignore
+  //       //@ts-expect-error
   //       _id: params.field,
   //     });
   //     console.log("result", result);
@@ -39,7 +39,7 @@ function WorkSpace({ params: paramsPromise }: any) {
   //   }
   // };
   const fileData = useQuery(api.functions.files.getFileById, {
-    //@ts-ignore
+    //@ts-expect-error
     _id: params?.field,
   });
 
@@ -84,10 +84,10 @@ function WorkSpace({ params: paramsPromise }: any) {
               <div>Loading...! Wait bro! What's the rush?</div>
             ) : (
               fileData && (
-                // @ts-ignore
+                // @ts-expect-error
                 <Editor
                   onSaveTrigger={triggerSave}
-                  //@ts-ignore
+                  //@ts-expect-error
                   fileId={params.field}
                   fileData={fileData}
                 />
@@ -103,10 +103,10 @@ function WorkSpace({ params: paramsPromise }: any) {
                 <div>Loading...! Wait bro! What's the rush?</div>
               ) : (
                 fileData && (
-                  // @ts-ignore
+                  // @ts-expect-error
                   <Editor
                     onSaveTrigger={triggerSave}
-                    //@ts-ignore
+                    //@ts-expect-error
 
                     fileId={params.field}
                     fileData={fileData}
@@ -115,10 +115,10 @@ function WorkSpace({ params: paramsPromise }: any) {
               )}
             </div>
             <div className="border-l">
-              {/* @ts-ignore */}
+              {/* @ts-expect-error */}
               <Canvas
                 onSaveTrigger={triggerSave}
-                //@ts-ignore
+                //@ts-expect-error
 
                 fileId={params?.field}
                 fileData={fileData}
@@ -129,10 +129,10 @@ function WorkSpace({ params: paramsPromise }: any) {
 
         {viewMode === "canvas" && (
           <div className="h-screen">
-            {/* @ts-ignore */}
+            {/* @ts-expect-error */}
             <Canvas
               onSaveTrigger={triggerSave}
-              //@ts-ignore
+              //@ts-expect-error
 
               fileId={params?.field}
               fileData={fileData}

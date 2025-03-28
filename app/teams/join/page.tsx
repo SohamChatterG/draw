@@ -38,7 +38,7 @@ function Join() {
     try {
       await addMembership({
         email: user.email,
-        //@ts-ignore
+        //@ts-expect-error
         teamId,
       });
 
@@ -47,7 +47,7 @@ function Join() {
     } catch (error) {
       console.error("Error joining team:", error);
       toast.error(
-        //@ts-ignore
+        //@ts-expect-error
 
         error?.message || "Failed to join the team. Please try again."
       );

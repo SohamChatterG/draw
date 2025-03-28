@@ -63,7 +63,7 @@ export const getTeamsForUser = query({
       .collect();
 
     const teamIds = memberships.map(membership => membership.teamId);
-    
+
     // Fetch teams by matching teamIds using Promise.all
     const teams = await Promise.all(
       teamIds.map(teamId => ctx.db.get(teamId))
@@ -72,5 +72,34 @@ export const getTeamsForUser = query({
     return teams.filter(team => team !== null); // Filter out any null results
   },
 });
-  
-  
+
+export const getTeamMembers = query({
+  args: {
+    teamId: v.id("teams"),
+  },
+  handler: async (ctx, args) => {
+    // Fetch all memberships for the team
+
+    const memberships = await ctx.db.query("memberships")
+      .filter(q => q.eq(q.field("teamId"), args.teamId))
+      .collect();
+
+    // Get the user IDs from the memberships
+    const userIds = memberships.map(membership => membership.userId);
+
+    // Fetch all users by their IDs
+    const users = await Promise.all(
+      userIds.map(userId => ctx.db.get(userId))
+    );
+
+    // Filter out null users and return user information including names
+    return users
+      .filter(user => user !== null)
+      .map(user => ({
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        userId: user._id
+      }));
+  },
+});

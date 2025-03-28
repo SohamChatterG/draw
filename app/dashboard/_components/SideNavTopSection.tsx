@@ -19,7 +19,6 @@ import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useHash } from "../../hooks/useHash";
 import { toast } from "sonner";
 export interface TEAM {
   createdBy: string;
@@ -48,13 +47,13 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
       icon: Settings,
     },
   ];
-  const { generateHash } = useHash();
 
   const router = useRouter();
   const convex = useConvex();
   const [activeTeam, setActiveTeam] = useState<TEAM | null>(null);
   const [teamList, setTeamList] = useState<TEAM[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [teamMembers, setTeamMembers] = useState([]);
 
   useEffect(() => {
     if (!user) return;
@@ -121,14 +120,36 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
         });
     }
   };
+  const avatarColors = ["bg-blue-500", "bg-green-500", "bg-red-500", "bg-purple-500", "bg-yellow-500"];
 
-  ////////////////////////
 
   const onMenuClick = (item: any) => {
     if (item.path) {
       router.push(item.path);
     }
   };
+  /////////////
+  useEffect(() => {
+
+    const getTeamMembers = async (teamId) => {
+      try {
+        const members = await convex.query(api.functions.membership.getTeamMembers, { teamId });
+        setTeamMembers(members);
+      } catch (error) {
+        console.error("Error fetching team members:", error);
+      }
+    };
+    if (activeTeam) {
+      getTeamMembers(activeTeam._id)
+    }
+  }, [activeTeam])
+
+
+
+
+  ///////////
+
+
 
   return (
     <div>
@@ -229,6 +250,25 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
         <LayoutGrid className="h-5 w-5" />
         All Files
       </Button>
+      <div className="mt-4 bg-white shadow-lg rounded-lg p-4">
+        <h3 className="font-semibold text-lg text-gray-800 border-b pb-2 mb-3">Team Members</h3>
+        {teamMembers.length > 0 ? (
+          <ul className={`space-y-2 ${teamMembers.length > 3 ? 'max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''}`}>
+            {teamMembers.map((member, index) => (
+              <li key={index} className="flex items-center space-x-3 p-2">
+                <div className={`w-8 h-8 text-white flex items-center justify-center rounded-full text-sm font-medium ${avatarColors[index % avatarColors.length]}`}>
+                  {member?.name?.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-gray-700 font-medium">{member?.name}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500">No members found</p>
+        )}
+      </div>
+
+
     </div>
   );
 }

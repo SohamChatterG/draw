@@ -7,16 +7,16 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { FileListContext } from "@/app/_context/FileListContext";
 function SideNav() {
-    const {user} = useKindeBrowserClient();
-    const [activeTeam,setActiveTeam] = useState<TEAM>()
-    const [totalFiles,setTotalFiles] =  useState<Number>()
+    const { user } = useKindeBrowserClient();
+    const [activeTeam, setActiveTeam] = useState<TEAM>()
+    const [totalFiles, setTotalFiles] = useState<Number>()
     const createFile = useMutation(api.functions.files.createFile)
-    const {fileList_,setFileList_} = useContext(FileListContext);
+    const { fileList_, setFileList_ } = useContext(FileListContext);
 
-    useEffect(()=>{
-        activeTeam&&getFiles();
+    useEffect(() => {
+        activeTeam && getFiles();
 
-    },[activeTeam])
+    }, [activeTeam])
 
     const convex = useConvex();
     const onFileCreate = (fileName: string) => {
@@ -24,47 +24,47 @@ function SideNav() {
         if (fileName && activeTeam && user) {
             createFile({
                 fileName: fileName,
-                //@ts-ignore
+                //@ts-expect-error
                 teamId: activeTeam._id ?? "",  // Use default value if null
                 createdBy: user.email ?? "",
                 archieve: false,
                 document: '',
                 whiteboard: ''
             })
-            .then(resp => {
-                if (resp) {
-                    getFiles()
-                    toast('File Created Successfully');
-                }
-            })
-            .catch(e => {
-                toast('Error while creating file');
-            });
+                .then(resp => {
+                    if (resp) {
+                        getFiles()
+                        toast('File Created Successfully');
+                    }
+                })
+                .catch(e => {
+                    toast('Error while creating file');
+                });
         }
     };
-    
+
     const getFiles = async () => {
-        //@ts-ignore
-        const result = await convex.query(api.functions.files.getFiles,{teamId:activeTeam?._id});
-        console.log('fileList from side nav ',result)
+        // @ts-expect-error
+        const result = await convex.query(api.functions.files.getFiles, { teamId: activeTeam?._id });
+        console.log('fileList from side nav ', result)
         setFileList_(result)
         setTotalFiles(result?.length)
     }
 
-  return (
-    <div className="flex flex-col h-screen fixed w-72 border-r p-6">
-        <div className="flex-1">
-        <SideNavTopSection user={user} 
-            setActiveTeamInfo={(activeTeam:TEAM)=>setActiveTeam(activeTeam)}
-        />
+    return (
+        <div className="flex flex-col h-screen fixed w-72 border-r p-6">
+            <div className="flex-1">
+                <SideNavTopSection user={user}
+                    setActiveTeamInfo={(activeTeam: TEAM) => setActiveTeam(activeTeam)}
+                />
+            </div>
+
+            <div>
+                <SideNavBottomSection onFileCreate={onFileCreate} totalFiles={totalFiles} />
+            </div>
+
         </div>
-        
-        <div>
-            <SideNavBottomSection onFileCreate={onFileCreate} totalFiles={totalFiles}/>
-        </div>
-        
-    </div>
-  )
+    )
 }
 
 export default SideNav
