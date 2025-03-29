@@ -1,6 +1,13 @@
 import { createContext, useContext } from "react";
+import { FILE } from "@/app/dashboard/_components/FileList"
 
-export const FileListContext = createContext<any>(undefined);
+
+type FileListContextType = {
+  fileList_: FILE[];
+  setFileList_: (files: FILE[]) => void;
+};
+
+export const FileListContext = createContext<FileListContextType | null>(null);
 
 export const useFileListContext = () => {
   const context = useContext(FileListContext);

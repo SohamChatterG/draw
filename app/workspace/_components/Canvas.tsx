@@ -1,27 +1,9 @@
-// import { Excalidraw } from "@excalidraw/excalidraw";
-
-// function Canvas(){
-//   return (
-//     <Excalidraw
-//       theme="light"
-//       onChange={(excalidrawElements, appState, files)=>console.log(excalidrawElements)}
-//       UIOptions={{
-//         canvasActions : {
-//           saveToActiveFile : true,
-//           loadScene : false,
-
-//         }
-//       }}
-//     />
-//   )
-// }
-
-// export default Canvas
 
 import React, { useEffect, useState } from "react";
 import { Excalidraw, MainMenu, WelcomeScreen } from "@excalidraw/excalidraw";
 import { FILE } from "../../dashboard/_components/FileList";
 import { useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 function Canvas({
   onSaveTrigger,
@@ -63,7 +45,20 @@ function Canvas({
       console.log("No whiteboard data to save");
     }
   };
+  useEffect(() => {
+    if (fileData?.whiteboard) {
+      setWhiteBoardData(fileData?.whiteboard ? JSON.parse(fileData.whiteboard) : []);
+    }
+  }, [fileData]);
+  const canvasData = useQuery(api.functions.files.getFileById, {
+    _id: fileId,
+  });
 
+  useEffect(() => {
+    if (canvasData?.whiteboard) {
+      setWhiteBoardData(JSON.parse(canvasData.whiteboard));
+    }
+  }, [canvasData]);
   // Add the useEffect hook to trigger save when onSaveTrigger changes
   useEffect(() => {
     if (onSaveTrigger) {
@@ -77,7 +72,8 @@ function Canvas({
         <Excalidraw
           theme="light"
           initialData={{
-            elements: fileData?.whiteboard && JSON.parse(fileData?.whiteboard),
+            // fileData?.whiteboard && JSON.parse(fileData?.whiteboard),
+            elements: whiteBoardData || [],
           }}
           onChange={(excalidrawElements, appState, files) =>
             setWhiteBoardData(excalidrawElements)
