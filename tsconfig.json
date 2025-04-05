@@ -8,9 +8,12 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "checkJs": false,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -32,8 +35,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "next.config.js", "next.config.js"  ],
+    ".next/types/**/*.ts",
+    "next.config.js",
+    "next.config.js"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -113,7 +113,7 @@ function Editor({
     const editor = new EditorJS({
       tools: {
         header: {
-          //@ts-expect error
+          //@ts-expect error 
           class: Header,
           inlineToolbar: true,
         },

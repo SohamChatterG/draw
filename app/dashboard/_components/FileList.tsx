@@ -23,9 +23,8 @@ export interface FILE {
 }
 
 function FileList() {
-  const { fileList_, setFileList_ } = useContext(FileListContext);
+  const { fileList_ } = useContext(FileListContext);
   const [fileList, setFileList] = useState<FILE[]>([]);
-  const { user }: any = useKindeBrowserClient();
   const router = useRouter();
 
   useEffect(() => {

@@ -9,9 +9,9 @@ import { FileListContext } from "@/app/_context/FileListContext";
 function SideNav() {
     const { user } = useKindeBrowserClient();
     const [activeTeam, setActiveTeam] = useState<TEAM>()
-    const [totalFiles, setTotalFiles] = useState<Number>()
+    const [totalFiles, setTotalFiles] = useState<number>()
     const createFile = useMutation(api.functions.files.createFile)
-    const { fileList_, setFileList_ } = useContext(FileListContext);
+    const { setFileList_ } = useContext(FileListContext);
 
     useEffect(() => {
         activeTeam && getFiles();
