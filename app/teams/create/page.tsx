@@ -1,101 +1,5 @@
-// "use client"
-// import React, { useState } from 'react';
-// import Image from 'next/image';
-// import logo from '@/public/logo-1.png';
-// import teamwork from '@/public/teamwork2.jpg';
-// import { Input } from '@/components/ui/input';
-// import { Button } from '@/components/ui/button';
-// import { useMutation } from 'convex/react';
-// import { api } from '@/convex/_generated/api';
-// import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-// import { toast } from 'sonner';
-// import { useRouter } from 'next/navigation';
-
-
-// interface User {
-//     email: string;
-// }
-
-
-
-// function Page() {
-  
-
-//     const { user } = useKindeBrowserClient() as { user: User };
-//     const [teamName, setTeamName] = useState('');
-//     const createTeam = useMutation(api.functions.teams.createTeam)
-//     const router = useRouter();
-//     const createNewTeam=()=>{
-//         createTeam({
-//             teamName:teamName,
-//             createdBy:user?.email,
-//         })
-//         .then(resp=>{
-//             if(resp){
-//                 console.log('Team creation response:', resp);
-//                 toast.success('Team created succesfully')
-//                 router.push('/dashboard')
-//             } else{
-//                 toast.error('Failed to create team. Please try again.');
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error creating team:', error);
-//             toast.error('An error occurred while creating the team.');
-//         });
-//     }
-//     return (
-//         <div
-//         className="bg-cover bg-center px-6 md:px-16 my-16 h-screen w-screen flex items-center justify-center"
-//         style={{
-//             backgroundImage: `url(${teamwork.src})`, // Use `teamwork.src` for Next.js Image
-//         }}
-//         >
-//         <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg max-w-xl">
-//             <Image src={logo} alt="logo" width={200} height={200} />
-//             <div className="flex flex-col items-center mt-8">
-//             <h2 className="font-bold text-[40px] py-3">
-//                 Go have a cool team name for your team
-//             </h2>
-//             <h2 className="text-gray-500 text-[20px]">
-//                 You can always change this later
-//             </h2>
-//             <div className="mt-7 w-full">
-//                 <label htmlFor="input" className="text-gray-400 text-[20px] ml-2">
-//                 Team Name
-//                 <Input
-//                     name="input"
-//                     placeholder="Team Name"
-//                     className="mt-3 text-[18px]"
-//                     onChange={(e) => {
-//                         setTeamName(e.target.value);
-//                     }}
-//                 />
-//                 </label>
-//             </div>
-//             <Button
-//                 className="bg-blue-500 text-white m-5 hover:bg-blue-200"
-//                 disabled={!(teamName && teamName.length > 0)}
-//                 onClick={()=>{
-//                     createNewTeam()
-//                 }}
-//             >
-//                 Click
-//             </Button>
-//             </div>
-//         </div>
-//         </div>
-//     );
-// }
-
-// export default Page;
-
-
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
-import logo from "@/public/logo-1.png";
-import teamwork from "@/public/teamwork2.jpg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
@@ -103,12 +7,14 @@ import { api } from "@/convex/_generated/api";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
+import { Loader2 } from "lucide-react";
 interface User {
   email: string;
 }
 
-function Page() {
+function Create() {
+  const [loading, setLoading] = useState(false);
+
   const { user } = useKindeBrowserClient() as { user: User };
   const [teamName, setTeamName] = useState("");
   const createTeam = useMutation(api.functions.teams.createTeam);
@@ -123,6 +29,7 @@ function Page() {
 
     try {
       // Create the team
+      setLoading(true);
       const team = await createTeam({
         teamName: teamName,
         createdBy: user.email,
@@ -146,10 +53,14 @@ function Page() {
             "Team created, but failed to add creator to the team. Please contact support."
           );
         }
+        setLoading(false);
+
       } else {
+        setLoading(false);
         toast.error("Failed to create team. Please try again.");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error creating team:", error);
       toast.error("An error occurred while creating the team.");
     }
@@ -157,39 +68,36 @@ function Page() {
 
   return (
     <div
-      className="bg-cover bg-center px-6 md:px-16 my-16 h-screen w-screen flex items-center justify-center"
+      className="bg-cover bg-center min-h-screen w-full flex items-center justify-center"
       style={{
-        backgroundImage: `url(${teamwork.src})`, // Use `teamwork.src` for Next.js Image
+        backgroundImage: `url('/create_team.png')`,
       }}
     >
-      <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg max-w-xl">
-        <Image src={logo} alt="logo" width={200} height={200} />
-        <div className="flex flex-col items-center mt-8">
-          <h2 className="font-bold text-[40px] py-3">
-            Go have a cool team name for your team
-          </h2>
-          <h2 className="text-gray-500 text-[20px]">
-            You can always change this later
-          </h2>
-          <div className="mt-7 w-full">
-            <label htmlFor="input" className="text-gray-400 text-[20px] ml-2">
-              Team Name
-              <Input
-                name="input"
-                placeholder="Team Name"
-                className="mt-3 text-[18px]"
-                onChange={(e) => {
-                  setTeamName(e.target.value);
-                }}
-              />
-            </label>
-          </div>
+      <div className="text-center text-white px-6 md:px-16 max-w-xl w-full">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
+          Let’s Create Your Team
+        </h1>
+        <p className="text-lg md:text-xl mb-10 text-gray-200 drop-shadow-sm">
+          You can always change this later
+        </p>
+
+        <div className="flex flex-col items-center">
+          <label htmlFor="teamName" className="text-lg text-white self-start ml-1 mb-1">
+            Team Name
+          </label>
+          <Input
+            name="teamName"
+            placeholder="Enter your team name"
+            className="text-black text-lg mb-6 w-full bg-white/80"
+            onChange={(e) => setTeamName(e.target.value)}
+          />
+
           <Button
-            className="bg-blue-500 text-white m-5 hover:bg-blue-200"
-            disabled={!(teamName && teamName.length > 0)}
+            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 text-lg rounded transition-all"
+            disabled={!(teamName && teamName.length > 0) || loading}
             onClick={createNewTeam}
           >
-            Click
+            {!loading ? 'Let’s Go' : <Loader2 className="animate-spin h-5 w-5 text-white" />}
           </Button>
         </div>
       </div>
@@ -197,4 +105,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default Create;

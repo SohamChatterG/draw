@@ -38,13 +38,11 @@ export const addMembership = mutation({
 });
 
 
-
 export const getTeamsForUser = query({
   args: {
-    email: v.string(), // User's email instead of userId
+    email: v.string(),
   },
   handler: async (ctx, args) => {
-    // Fetch the user's userId using their email
     const user = await ctx.db
       .query("user")
       .filter(q => q.eq(q.field("email"), args.email))
@@ -56,7 +54,6 @@ export const getTeamsForUser = query({
 
     const userId = user._id;
 
-    // Fetch all memberships for the user
     const memberships = await ctx.db
       .query("memberships")
       .filter(q => q.eq(q.field("userId"), userId))
@@ -64,7 +61,6 @@ export const getTeamsForUser = query({
 
     const teamIds = memberships.map(membership => membership.teamId);
 
-    // Fetch teams by matching teamIds using Promise.all
     const teams = await Promise.all(
       teamIds.map(teamId => ctx.db.get(teamId))
     );
@@ -78,16 +74,13 @@ export const getTeamMembers = query({
     teamId: v.id("teams"),
   },
   handler: async (ctx, args) => {
-    // Fetch all memberships for the team
 
     const memberships = await ctx.db.query("memberships")
       .filter(q => q.eq(q.field("teamId"), args.teamId))
       .collect();
 
-    // Get the user IDs from the memberships
     const userIds = memberships.map(membership => membership.userId);
 
-    // Fetch all users by their IDs
     const users = await Promise.all(
       userIds.map(userId => ctx.db.get(userId))
     );
@@ -101,5 +94,39 @@ export const getTeamMembers = query({
         image: user.image,
         userId: user._id
       }));
+  },
+});
+
+export const leaveTeam = mutation({
+  args: {
+    email: v.string(),
+    teamId: v.id("teams"),
+  },
+  handler: async (ctx, args) => {
+    // Find the user by email
+    const user = await ctx.db
+      .query("user")
+      .filter(q => q.eq(q.field("email"), args.email))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const userId = user._id;
+
+    const membership = await ctx.db
+      .query("memberships")
+      .filter(q => q.eq(q.field("userId"), userId))
+      .filter(q => q.eq(q.field("teamId"), args.teamId))
+      .first();
+
+    if (!membership) {
+      throw new Error("Membership not found");
+    }
+
+    await ctx.db.delete(membership._id);
+
+    return { success: true, message: "Successfully left the team" };
   },
 });

@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useMutation } from "convex/react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 import { Separator } from "@/components/ui/separator";
 import { useConvex } from "convex/react";
@@ -57,7 +58,7 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
 
   useEffect(() => {
     if (!user) return;
-    getTeamList(); // Fetch teams once the user is available
+    getTeamList();
   }, [user]);
 
   useEffect(() => {
@@ -68,14 +69,14 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
 
   useEffect(() => {
     if (activeTeam) {
-      setActiveTeamInfo(activeTeam); // Existing functionality
-      localStorage.setItem("activeTeam", JSON.stringify(activeTeam)); // Save to localStorage
+      setActiveTeamInfo(activeTeam);
+      localStorage.setItem("activeTeam", JSON.stringify(activeTeam));
     }
   }, [activeTeam, setActiveTeamInfo]);
 
   const getTeamList = async () => {
     try {
-      setLoading(true); // Start loading state
+      setLoading(true);
 
       const result = await convex.query(
         api.functions.membership.getTeamsForUser,
@@ -90,13 +91,13 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
         const parsedTeam = JSON.parse(savedActiveTeam);
         const isTeamStillValid = result?.some(
           (team) => team.id === parsedTeam.id
-        ); // Validate team exists in current list
+        );
 
         if (isTeamStillValid) {
-          setActiveTeam(parsedTeam); // Restore from localStorage
+          setActiveTeam(parsedTeam);
         } else {
-          setActiveTeam(result?.[0] || null); // Default to the first team if the saved team is no longer valid
-          localStorage.removeItem("activeTeam"); // Clear invalid team
+          setActiveTeam(result?.[0] || null);
+          localStorage.removeItem("activeTeam");
         }
       } else {
         setActiveTeam(result?.[0] || null); // Default to the first team if no saved team exists
@@ -107,6 +108,23 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
       setLoading(false); // End loading state
     }
   };
+  const leaveTeam = useMutation(api.functions.membership.leaveTeam);
+
+  const handleRemoveTeam = async (teamId: string) => {
+    try {
+      await leaveTeam({
+        email: user?.email,
+        teamId,
+      });
+
+      toast.success("Left team successfully");
+
+      getTeamList(); // Refresh team list
+    } catch (error: any) {
+      toast.error(error.message || "Failed to leave team");
+    }
+  };
+
 
   const handleCopy = () => {
     if (activeTeam?._id) {
@@ -128,7 +146,7 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
       router.push(item.path);
     }
   };
-  /////////////
+
   useEffect(() => {
 
     const getTeamMembers = async (teamId) => {
@@ -145,30 +163,27 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
   }, [activeTeam])
 
 
-
-
-  ///////////
-
-
-
   return (
     <div>
-      <Image src="/logo-1.png" alt="logo" width={50} height={50} />
+      <Image src="/draw.jpg" alt="logo" width={50} height={50} />
       <Popover>
-        <button onClick={handleCopy} className="">
-          <Copy />
+        <button onClick={handleCopy} title="Copy Team ID" className="hover:text-blue-600 transition mr-2">
+          <Copy className="w-4 h-4" />
         </button>
+
+
         <PopoverTrigger>
           <div className="flex items-center gap-3">
             <div className="flex flex-col">
               <h2
-                className="flex mt-5 gap-5 items-center
-                font-bold text-[17px] hover:bg-slate-200 p-3 rounded-lg
-                cursor-pointer"
+                className="flex mt-5 gap-3 items-center text-[16px] px-4 py-2 rounded-xl bg-white/60 backdrop-blur-md shadow-md border border-gray-200 transition hover:shadow-lg group"
               >
-                {activeTeam ? activeTeam.teamName : "Select a Team"}
-                <ChevronDown />
+                <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                  {activeTeam ? activeTeam.teamName : "Select a Team"}
+                </span>
+                <ChevronDown className="w-4 h-4 text-gray-500 group-hover:translate-y-1 transition-transform duration-300" />
               </h2>
+
             </div>
           </div>
         </PopoverTrigger>
@@ -181,18 +196,43 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
             <div>
               {teamList?.length > 0 ? (
                 teamList.map((team, index) => (
-                  <h2
+                  <div
                     key={index}
-                    className={`${activeTeam?._id !== team._id && "p-2 hover:bg-blue-100 hover:text-white rounded-lg mb-1 cursor-pointer"}
-                      ${activeTeam?._id === team._id && "bg-blue-500 text-white p-2 rounded-lg mb-1 cursor-pointer"}`}
-                    onClick={() => setActiveTeam(team)}
+                    className={`flex justify-between items-center p-2 mb-1 rounded-lg cursor-pointer transition-all 
+        ${activeTeam?._id === team._id
+                        ? "bg-blue-500 text-white"
+                        : "hover:bg-blue-100 hover:text-black"
+                      }`}
                   >
-                    {team.teamName}
-                  </h2>
+                    <h2
+                      onClick={() => setActiveTeam(team)}
+                      className="flex-1"
+                    >
+                      {team.teamName}
+                    </h2>
+                    {activeTeam?._id !== team._id && (
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // prevent triggering setActiveTeam
+                            handleRemoveTeam(team._id);
+                          }}
+                          className="p-1 hover:text-red-500 transition-transform transform hover:scale-110"
+                        >
+                          <LogOut className="w-4 h-4" />
+                        </button>
+                        {/* Tooltip */}
+                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                          Leave Team
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ))
               ) : (
                 <p>No teams available</p>
               )}
+
             </div>
           )}
           <Separator className="mt-2 bg-slate-100" />
@@ -259,7 +299,9 @@ export default function SideNavTopSection({ user, setActiveTeamInfo }: any) {
                 <div className={`w-8 h-8 text-white flex items-center justify-center rounded-full text-sm font-medium ${avatarColors[index % avatarColors.length]}`}>
                   {member?.name?.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-gray-700 font-medium">{member?.name}</span>
+                <div title={member.name} className="hover:bg-gray-100">
+                  {member?.name?.length > 10 ? member.name.slice(0, 10) + "..." : member.name}
+                </div>
               </li>
             ))}
           </ul>

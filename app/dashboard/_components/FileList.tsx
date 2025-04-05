@@ -1,6 +1,5 @@
 import { FileListContext } from "@/app/_context/FileListContext";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Archive, MoreHorizontal } from "lucide-react";
+import { Archive, MoreHorizontal, FileText } from "lucide-react";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -66,7 +65,8 @@ function FileList() {
                   className="odd:bg-gray-50 cursor-pointer hover:bg-gray-100"
                   onClick={() => router.push(`/workspace/${file._id}`)}
                 >
-                  <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                  <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-gray-500" />
                     {file.fileName || "Unnamed File"}
                   </td>
                   <td className="whitespace-nowrap px-4 py-2 text-gray-700">

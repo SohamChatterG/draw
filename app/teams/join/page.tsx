@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import logo from "@/public/logo-1.png";
-import teamwork from "@/public/teamwork2.jpg";
+import logo from "@/public/draw.jpg";
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
@@ -11,7 +11,6 @@ import { api } from "@/convex/_generated/api";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import useHash from "@/app/hooks/useHash";
 
 interface User {
   email: string;
@@ -19,34 +18,28 @@ interface User {
 
 function Join() {
   const [inputVal, setInputVal] = useState("");
-  const [teamId, setTeamId] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user } = useKindeBrowserClient() as { user: User };
   const addMembership = useMutation(api.functions.membership.addMembership);
   const router = useRouter();
-  const { getOriginal } = useHash();
   const handleJoinTeam = async () => {
-    const a = getOriginal(inputVal);
-    console.log("a", a);
-    setTeamId(a);
-    if (!teamId || !user?.email) {
-      toast.error(
-        "Please provide a valid Team ID and ensure you're logged in."
-      );
-      return;
-    }
+
+
 
     try {
+      setLoading(true)
       await addMembership({
         email: user.email,
         //@ts-expect-error
-        teamId,
+        teamId: inputVal,
       });
 
       toast.success("Successfully joined the team!");
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Error joining team:", error);
-      toast.error(
+    } catch (error: any) {
+      setLoading(false)
+      console.log("Error joining team:", error);
+      toast(
         error?.message || "Failed to join the team. Please try again."
       );
     }
@@ -54,42 +47,49 @@ function Join() {
 
   return (
     <div
-      className="bg-cover bg-center px-6 md:px-16 my-16 h-screen w-screen flex items-center justify-center"
+      className="relative bg-cover bg-center h-screen w-screen flex items-center justify-center"
       style={{
-        backgroundImage: `url(${teamwork.src})`, // Use `teamwork.src` for Next.js Image
+        backgroundImage: `url("/join_team2.png")`,
       }}
     >
-      <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg max-w-xl">
-        <Image src={logo} alt="logo" width={200} height={200} />
-        <div className="flex flex-col items-center mt-8">
-          <h2 className="font-bold text-[40px] py-3">Join a Team</h2>
-          <h2 className="text-gray-500 text-[20px]">
-            Enter your Team ID to get started
-          </h2>
-          <div className="mt-7 w-full">
-            <label htmlFor="teamId" className="text-gray-400 text-[20px] ml-2">
-              Team ID
-              <Input
-                id="teamId"
-                name="teamId"
-                placeholder="Team ID"
-                className="mt-3 text-[18px]"
-                value={inputVal}
-                onChange={(e) => setInputVal(e.target.value)}
-              />
-            </label>
-          </div>
-          <Button
-            className="bg-blue-500 text-white m-5 hover:bg-blue-200"
-            disabled={!(inputVal && inputVal.length > 0)}
-            onClick={handleJoinTeam}
-          >
-            Join Team
-          </Button>
+      {/* Optional overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black bg-opacity-30 z-0" />
+
+      {/* Content */}
+      <div className="relative z-10 text-white flex flex-col items-center">
+        <Image src={logo} alt="logo" width={120} height={120} className="mb-6" />
+        <h2 className="font-bold text-4xl md:text-5xl mb-2 drop-shadow-lg">Join a Team</h2>
+        <p className="text-lg md:text-xl mb-6 text-gray-100 drop-shadow-md">
+          Enter your Team ID to get started
+        </p>
+
+        <div className="w-[280px] md:w-[360px]">
+          <label htmlFor="teamId" className="block text-gray-100 text-lg mb-1 ml-1">
+            Team ID
+          </label>
+          <Input
+            id="teamId"
+            name="teamId"
+            placeholder="Team ID"
+            className="text-[16px] px-4 py-2 rounded-md border-none shadow-md bg-white text-black w-full"
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+          />
         </div>
+
+        <Button
+          className="bg-blue-500 text-white mt-5 px-6 py-2 rounded-md hover:bg-blue-600 shadow-md"
+          disabled={!inputVal}
+          onClick={handleJoinTeam}
+        >
+          {
+            !loading ? ("Join Team") : <Loader2 className="animate-spin h-5 w-5 text-white" />
+          }
+        </Button>
       </div>
     </div>
   );
+
 }
 
 export default Join;

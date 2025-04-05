@@ -1,6 +1,6 @@
 import Image from "next/image";
-import logo from "@/public/logo-1.png";
-import { Link, Save } from "lucide-react";
+import logo from "@/public/draw.jpg";
+import { Link, Save, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FileData {
@@ -8,6 +8,7 @@ interface FileData {
   name: string;
   content: string;
   createdAt: Date;
+  fileName: string
 }
 
 interface WorkSpaceHeaderProps {
@@ -43,24 +44,35 @@ function WorkSpaceHeader({ onSave, fileData }: WorkSpaceHeaderProps) {
   };
 
   return (
-    <div className="flex p-3 border-b justify-between items-center">
-      <div className="flex gap-2 items-center">
-        <Image src={logo} alt="logo" height={40} width={40} />
-        {fileData ? <h3>{fileData?.fileName}</h3> : <h2>File Name</h2>}
+    <div className="flex justify-between items-center px-6 py-4 border-b backdrop-blur-md bg-white/60 shadow-md rounded-b-xl relative">
+      {/* Logo (left) */}
+      <div className="flex gap-3 items-center">
+        <Image src={logo} alt="logo" height={40} width={40} className="rounded-md shadow" />
       </div>
-      <div className="flex items-center gap-4">
+
+      {/* File Name (center) */}
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
+        <FileText className="h-5 w-5 text-indigo-600" />
+        <h2 className="text-md sm:text-lg font-semibold text-indigo-800 px-3 py-1 rounded-md bg-indigo-100 shadow-inner max-w-[250px] truncate">
+          {fileData?.fileName ?? "Untitled File"}
+        </h2>
+      </div>
+
+      {/* Buttons (right) */}
+      <div className="flex items-center gap-3">
         <Button
-          className="h-8 text-[12px] gap-2 bg-yellow-500 hover:bg-yellow-600"
-          onClick={() => onSave()}
+          className="h-9 text-sm font-medium px-4 gap-2 bg-yellow-500 hover:bg-yellow-600 transition-colors shadow-sm"
+          onClick={onSave}
         >
           <Save className="h-4 w-4" />
           Save
         </Button>
         <Button
-          className="h-8 text-[12px] gap-2 bg-green-500 hover:bg-green-600"
+          className="h-9 text-sm font-medium px-4 gap-2 bg-green-500 hover:bg-green-600 transition-colors shadow-sm"
           onClick={handleCanvasToImage}
         >
-          Share <Link className="h-4 w-4" />
+          Share
+          <Link className="h-4 w-4" />
         </Button>
       </div>
     </div>
