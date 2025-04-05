@@ -11,7 +11,6 @@ import { api } from "@/convex/_generated/api";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useHash } from "../../hooks/useHash";
 
 interface User {
   email: string;

@@ -15,29 +15,7 @@ function WorkSpace({ params: paramsPromise }: any) {
   const convex = useConvex();
   const [viewMode, setViewMode] = useState("both"); // Possible values: "editor", "both", "canvas"
 
-  // useEffect(() => {
-  //   //@ts-expect-error
-  //   if (params.field) {
-  //     getFileData();
-  //   }
-  //   //@ts-expect-error
-  // }, [params.field]);
-
-  // const getFileData = () => {
-  //   try {
-  //     //@ts-expect-error
-  //     const result = useQuery(api.functions.files.getFileById, {
-  //       //@ts-expect-error
-  //       _id: params.field,
-  //     });
-  //     console.log("result", result);
-  //     setFileData(result);
-  //   } catch (error) {
-  //     console.error("Error fetching file data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  
   const fileData = useQuery(api.functions.files.getFileById, {
     //@ts-expect-error
     _id: params?.field,

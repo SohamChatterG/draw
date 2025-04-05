@@ -63,7 +63,6 @@ function Editor({
       );
     }
   });
-  const [document, setDocument] = useState();
 
   useEffect(() => {
     if (fileData) {
@@ -114,12 +113,12 @@ function Editor({
     const editor = new EditorJS({
       tools: {
         header: {
-          //@ts-ignore
+          //@ts-expect error
           class: Header,
           inlineToolbar: true,
         },
         list: {
-          //@ts-ignore
+          //@ts-expect-error
           class: List,
           inlineToolbar: true,
           config: {
