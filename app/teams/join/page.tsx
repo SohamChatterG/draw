@@ -11,6 +11,7 @@ import { api } from "@/convex/_generated/api";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useHash from "@/app/hooks/useHash";
 
 interface User {
   email: string;
@@ -46,8 +47,6 @@ function Join() {
     } catch (error) {
       console.error("Error joining team:", error);
       toast.error(
-        //@ts-expect-error
-
         error?.message || "Failed to join the team. Please try again."
       );
     }

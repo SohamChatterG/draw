@@ -3,7 +3,6 @@ import React from "react";
 const mapping = new Map();
 export function useHash() {
   function generateHash(input, length = 10) {
-    console.log("input", input);
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
       hash = (hash * 31 + input.charCodeAt(i)) % 1000000007;
